@@ -5,7 +5,7 @@ if(!equals(QT_MAJOR_VERSION, 5)|!equals(QT_MINOR_VERSION, 3)) {
 
 TEMPLATE = app
 TARGET = phantomjs
-QT += network webkitwidgets
+QT += sql network webkitwidgets
 CONFIG += console
 
 DESTDIR = ../bin
@@ -33,6 +33,7 @@ HEADERS += \
     encoding.h \
     config.h \
     childprocess.h \
+    sql.h \
     repl.h \
     crashdump.h
 
@@ -51,8 +52,10 @@ SOURCES += phantom.cpp \
     encoding.cpp \
     config.cpp \
     childprocess.cpp \
+	sql.cpp \
     repl.cpp \
     crashdump.cpp
+    
 
 OTHER_FILES += \
     bootstrap.js \
@@ -62,6 +65,7 @@ OTHER_FILES += \
     modules/webserver.js \
     modules/child_process.js \
     modules/cookiejar.js \
+    modules/sql.js \
     repl.js
 
 include(mongoose/mongoose.pri)
@@ -75,9 +79,23 @@ linux*|mac|openbsd* {
       breakpad/src/common/convert_UTF.c \
       breakpad/src/common/md5.cc \
       breakpad/src/common/string_conversion.cc 
+
+    QTPLUGIN += \
+        qcncodecs \
+        qjpcodecs \
+        qkrcodecs \
+        qtwcodecs \
+        qsqlmysql
+
 }
 
 linux* {
+    INCLUDEPATH += /usr/lib64/mysql/	
+
+    LIBS += -L/usr/lib64/mysql/ -lmysqlclient_r
+
+#DEPENDPATH_PATH += /usr/lib64/mysql/ 
+	
     SOURCES += breakpad/src/client/linux/crash_generation/crash_generation_client.cc \
       breakpad/src/client/linux/handler/exception_handler.cc \
       breakpad/src/client/linux/log/log.cc \
@@ -125,6 +143,12 @@ win32-msvc* {
       breakpad/src/common/windows/guid_string.cc
     CONFIG(static) {
         DEFINES += STATIC_BUILD
+        QTPLUGIN += \
+            qcncodecs \
+            qjpcodecs \
+            qkrcodecs \
+            qtwcodecs \
+            qico
     }
 }
 

@@ -39,6 +39,7 @@
 #include "system.h"
 #include "childprocess.h"
 #include "cookiejar.h"
+#include "sql.h"
 
 class WebPage;
 class CustomPage;
@@ -108,6 +109,7 @@ public slots:
     QObject *createFilesystem();
     QObject *createSystem();
     QObject *createCallback();
+    QObject *createSql();
     void loadModule(const QString &moduleSource, const QString &filename);
     bool injectJs(const QString &jsFilePath);
 
@@ -192,6 +194,7 @@ private:
     QString m_script;
     QVariantMap m_defaultPageSettings;
     FileSystem *m_filesystem;
+    Sql *m_sql;
     System *m_system;
     ChildProcess *m_childprocess;
     QList<QPointer<WebPage> > m_pages;

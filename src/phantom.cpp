@@ -50,6 +50,7 @@
 #include "callback.h"
 #include "cookiejar.h"
 #include "childprocess.h"
+#include "sql.h"
 
 static Phantom *phantomInstance = NULL;
 
@@ -59,6 +60,7 @@ Phantom::Phantom(QObject *parent)
     , m_terminated(false)
     , m_returnValue(0)
     , m_filesystem(0)
+    , m_sql(0)
     , m_system(0)
     , m_childprocess(0)
 {
@@ -353,6 +355,16 @@ QObject *Phantom::_createChildProcess()
     }
 
     return m_childprocess;
+}
+
+QObject *Phantom::createSql()
+{
+    qDebug() << "Phantom - createSql";
+	if (!m_sql) {
+        m_sql = new Sql(this);
+	}
+	
+    return m_sql;
 }
 
 QObject* Phantom::createCallback()
