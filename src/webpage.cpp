@@ -905,7 +905,7 @@ void WebPage::close() {
     deleteLater();
 }
 
-bool WebPage::render(const QString &fileName, const QVariantMap &option)
+bool WebPage::render(const QString &fileName, const QVariantMap &option, const QVariantMap &info)
 {
     if (m_mainFrame->contentsSize().isEmpty())
         return false;
@@ -954,6 +954,9 @@ bool WebPage::render(const QString &fileName, const QVariantMap &option)
             f = format.toLocal8Bit().constData();
         }
 
+        for(QVariantMap::const_iterator iter = info.begin(); iter != info.end(); ++iter) {
+            rawPageRendering.setText( iter.key(), iter.value().toString());
+        }
         retval = rawPageRendering.save(outFileName, f, quality);
     }
 
@@ -996,7 +999,7 @@ bool WebPage::render(const QString &fileName, const QVariantMap &option)
     return retval;
 }
 
-QString WebPage::renderBase64(const QByteArray &format)
+QString WebPage::renderBase64(const QByteArray &format, const int quality)
 {
     QByteArray nformat = format.toLower();
 
@@ -1010,7 +1013,7 @@ QString WebPage::renderBase64(const QByteArray &format)
         buffer.open(QIODevice::WriteOnly);
 
         // Writing image to the buffer, using PNG encoding
-        rawPageRendering.save(&buffer, nformat);
+        rawPageRendering.save(&buffer, nformat, quality);
 
         return bytes.toBase64();
     }
@@ -1037,7 +1040,7 @@ QImage WebPage::renderImage()
 #endif
 
     QImage buffer(frameRect.size(), format);
-    buffer.fill(Qt::transparent);
+    buffer.fill(QColor(255, 255, 255, 255));
 
     QPainter painter;
 
@@ -1051,7 +1054,7 @@ QImage WebPage::renderImage()
         for (int y = 0; y < vtiles; ++y) {
 
             QImage tileBuffer(tileSize, tileSize, format);
-            tileBuffer.fill(Qt::transparent);
+            tileBuffer.fill(QColor(255, 255, 255, 255));
 
             // Render the web page onto the small tile first
             painter.begin(&tileBuffer);

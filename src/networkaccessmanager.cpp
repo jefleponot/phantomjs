@@ -44,6 +44,7 @@
 #include "cookiejar.h"
 #include "networkaccessmanager.h"
 #include "networkreplyproxy.h"
+#include "networkproxyfactory.h"
 
 // 10 MB
 const qint64 MAX_REQUEST_POST_BODY_SIZE = 10 * 1000 * 1000;
@@ -163,6 +164,8 @@ NetworkAccessManager::NetworkAccessManager(QObject *parent, const Config *config
     , m_sslConfiguration(QSslConfiguration::defaultConfiguration())
     , m_replyTracker(this)
 {
+    NetworkProxyFactory* proxyFactory = new NetworkProxyFactory();
+
     if (config->diskCacheEnabled()) {
         m_networkDiskCache = new QNetworkDiskCache(this);
         m_networkDiskCache->setCacheDirectory(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
@@ -214,6 +217,10 @@ NetworkAccessManager::NetworkAccessManager(QObject *parent, const Config *config
 
             m_sslConfiguration.setCaCertificates(caCerts);
         }
+    }
+
+    if (proxyFactory->initializeFromEnvironment(config)) {
+        setProxyFactory(proxyFactory);
     }
 
     connect(this, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), SLOT(provideAuthentication(QNetworkReply*,QAuthenticator*)));

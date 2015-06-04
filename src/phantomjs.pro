@@ -27,6 +27,7 @@ HEADERS += \
     networkreplyproxy.h \
     networkreplytracker.h \
     networkaccessmanager.h \
+    networkproxyfactory.h \
     cookiejar.h \
     filesystem.h \
     system.h \
@@ -47,6 +48,7 @@ SOURCES += phantom.cpp \
     networkreplyproxy.cpp \
     networkreplytracker.cpp \
     networkaccessmanager.cpp \
+    networkproxyfactory.cpp \
     cookiejar.cpp \
     filesystem.cpp \
     system.cpp \
