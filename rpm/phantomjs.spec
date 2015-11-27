@@ -36,7 +36,7 @@ Canvas, and SVG. PhantomJS is created by Ariya Hidayat.
 %setup -q
 
 %build
-./build.sh --confirm
+./build.py --confirm
 
 %install
 mkdir -p %{buildroot}%{_bindir}
